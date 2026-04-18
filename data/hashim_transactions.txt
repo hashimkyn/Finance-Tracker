@@ -1,0 +1,2 @@
+INCOME|A8F40DF8|40000.0|Salary|Monthly Pay|2026-04-18
+EXPENSE|7959F213|2000.0|Food|Hangout with Friends|2026-04-18
