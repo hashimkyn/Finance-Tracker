@@ -8,6 +8,3 @@
 # OS junk
 .DS_Store
 Thumbs.db
-
-# Optional: ignore your data files
-data/
