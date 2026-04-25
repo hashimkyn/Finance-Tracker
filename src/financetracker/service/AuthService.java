@@ -50,4 +50,5 @@ public class AuthService {
     public boolean usernameExists(String username) {
         return users.stream().anyMatch(u -> u.getUsername().equalsIgnoreCase(username));
     }
+
 }

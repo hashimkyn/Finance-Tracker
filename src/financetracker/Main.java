@@ -6,15 +6,6 @@ import financetracker.util.ConsoleHelper;
 
 import java.util.*;
 
-/**
- * Entry point – Personal Finance & Expense Tracker
- *
- * OOP Concepts Demonstrated:
- *   • Abstraction    → Transaction (abstract class)
- *   • Inheritance    → Income, Expense extend Transaction
- *   • Encapsulation  → Private fields with getters; User password hashing
- *   • Composition    → Wallet contains List<Transaction>; WalletService owns Wallet & budgets
- */
 public class Main {
 
     private static final Scanner sc = new Scanner(System.in);
@@ -27,7 +18,7 @@ public class Main {
         auth = new AuthService();
         printBanner();
         mainMenu();
-        System.out.println(ConsoleHelper.CYAN + "\n  Goodbye! 👋\n" + ConsoleHelper.RESET);
+        System.out.println(ConsoleHelper.CYAN + "\n  Goodbye!\n" + ConsoleHelper.RESET);
     }
 
     // ═══════════════════════════ MENUS ═══════════════════════════════════════
@@ -36,7 +27,7 @@ public class Main {
         while (true) {
             ConsoleHelper.printHeader("Personal Finance & Expense Tracker");
             ConsoleHelper.printMenu(new String[]{"Register", "Login"});
-            int choice = ConsoleHelper.promptInt(sc, "→ Choice:", 0, 2);
+            int choice = ConsoleHelper.promptInt(sc, "Choice:", 0, 2);
             switch (choice) {
                 case 1 -> doRegister();
                 case 2 -> { if (doLogin()) dashboardMenu(); }
@@ -50,7 +41,7 @@ public class Main {
         insightsSvc = new InsightsService(walletSvc);
 
         while (true) {
-            ConsoleHelper.printHeader("Dashboard — Welcome, " + currentUser.getUsername());
+            ConsoleHelper.printHeader("Dashboard -- Welcome, " + currentUser.getUsername());
             System.out.printf("  %sWallet Balance: %.2f PKR%s%n%n",
                     ConsoleHelper.GREEN, walletSvc.getBalance(), ConsoleHelper.RESET);
             ConsoleHelper.printMenu(new String[]{
@@ -61,7 +52,7 @@ public class Main {
                     "Financial Insights",
                     "Logout"
             });
-            int choice = ConsoleHelper.promptInt(sc, "→ Choice:", 0, 6);
+            int choice = ConsoleHelper.promptInt(sc, "Choice:", 0, 6);
             switch (choice) {
                 case 1 -> doAddIncome();
                 case 2 -> doAddExpense();
@@ -127,7 +118,7 @@ public class Main {
         for (int i = 0; i < cats.size(); i++) {
             System.out.printf("  %s[%d]%s %s%n", ConsoleHelper.YELLOW, i + 1, ConsoleHelper.RESET, cats.get(i));
         }
-        int catIdx = ConsoleHelper.promptInt(sc, "→ Category:", 1, cats.size());
+        int catIdx = ConsoleHelper.promptInt(sc, "Category:", 1, cats.size());
         String category = cats.get(catIdx - 1);
         String desc = ConsoleHelper.prompt(sc, "Description:");
 
@@ -159,7 +150,7 @@ public class Main {
         while (true) {
             ConsoleHelper.printHeader("View Transactions");
             ConsoleHelper.printMenu(new String[]{"All Transactions", "Filter by Month"});
-            int choice = ConsoleHelper.promptInt(sc, "→ Choice:", 0, 2);
+            int choice = ConsoleHelper.promptInt(sc, "Choice:", 0, 2);
             switch (choice) {
                 case 1 -> printTransactions(walletSvc.getAllTransactions(), "All Transactions");
                 case 2 -> doMonthFilter();
@@ -172,7 +163,7 @@ public class Main {
         int year  = ConsoleHelper.promptInt(sc, "Year (e.g. 2025):", 2000, 2100);
         int month = ConsoleHelper.promptInt(sc, "Month (1-12):",       1,    12);
         List<Transaction> txs = walletSvc.getTransactionsByMonth(year, month);
-        printTransactions(txs, String.format("Transactions — %04d-%02d", year, month));
+        printTransactions(txs, String.format("Transactions -- %04d-%02d", year, month));
     }
 
     private static void printTransactions(List<Transaction> txs, String title) {
@@ -199,7 +190,7 @@ public class Main {
         while (true) {
             ConsoleHelper.printHeader("Budget Manager");
             ConsoleHelper.printMenu(new String[]{"Set / Update Budget", "View All Budgets"});
-            int choice = ConsoleHelper.promptInt(sc, "→ Choice:", 0, 2);
+            int choice = ConsoleHelper.promptInt(sc, "Choice:", 0, 2);
             switch (choice) {
                 case 1 -> doSetBudget();
                 case 2 -> viewBudgets();
@@ -213,7 +204,7 @@ public class Main {
         System.out.println(ConsoleHelper.BOLD + "\n  Select Category:" + ConsoleHelper.RESET);
         for (int i = 0; i < cats.size(); i++)
             System.out.printf("  %s[%d]%s %s%n", ConsoleHelper.YELLOW, i + 1, ConsoleHelper.RESET, cats.get(i));
-        int catIdx = ConsoleHelper.promptInt(sc, "→ Category:", 1, cats.size());
+        int catIdx = ConsoleHelper.promptInt(sc, "Category:", 1, cats.size());
         String category = cats.get(catIdx - 1);
         double limit = ConsoleHelper.promptDouble(sc, "Monthly Limit (PKR):");
         walletSvc.setBudget(category, limit);
@@ -245,7 +236,7 @@ public class Main {
     private static void printBanner() {
         System.out.println(ConsoleHelper.CYAN);
         System.out.println("  ╔══════════════════════════════════════════════════════╗");
-        System.out.println("  ║     💰  PERSONAL FINANCE & EXPENSE TRACKER  💰       ║");
+        System.out.println("  ║          PERSONAL FINANCE & EXPENSE TRACKER          ║");
         System.out.println("  ║          Console-Based Java OOP Application          ║");
         System.out.println("  ╚══════════════════════════════════════════════════════╝");
         System.out.println(ConsoleHelper.RESET);

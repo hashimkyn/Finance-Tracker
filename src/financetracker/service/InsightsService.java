@@ -22,7 +22,7 @@ public class InsightsService {
     }
 
     public void printInsights() {
-        ConsoleHelper.printHeader("📊  FINANCIAL INSIGHTS");
+        ConsoleHelper.printHeader("FINANCIAL INSIGHTS");
 
         // ── 1. Summary ──────────────────────────────────────────────────────
         double income   = walletService.getTotalIncome();
@@ -37,7 +37,7 @@ public class InsightsService {
         ConsoleHelper.printSeparator();
 
         // ── 2. Category-wise Spending (current month) ─────────────────────
-        System.out.println(ConsoleHelper.BOLD + "  Category Spending — " + YearMonth.now() + ConsoleHelper.RESET);
+        System.out.println(ConsoleHelper.BOLD + "  Category Spending -- " + YearMonth.now() + ConsoleHelper.RESET);
         Map<String, Double> catSpend = getCategorySpendingThisMonth();
         if (catSpend.isEmpty()) {
             ConsoleHelper.info("No expenses recorded this month.");
@@ -57,7 +57,7 @@ public class InsightsService {
             double  limit = e.getValue().getLimit();
             double  spent = walletService.getCategorySpending(cat);
             if (spent > limit) {
-                System.out.printf("    %s⚠  %-14s Spent: %.2f / Limit: %.2f PKR (over by %.2f)%s%n",
+                System.out.printf("%s %-14s Spent: %.2f / Limit: %.2f PKR (over by %.2f)%s%n",
                         ConsoleHelper.YELLOW, cat, spent, limit, spent - limit, ConsoleHelper.RESET);
                 anyViolation = true;
             }
@@ -76,7 +76,7 @@ public class InsightsService {
             System.out.printf("    %sRecommended/Day : %.2f PKR%s%n",
                     ConsoleHelper.GREEN, dailyBudget, ConsoleHelper.RESET);
         } else if (balance <= 0) {
-            ConsoleHelper.error("No balance remaining — please add income.");
+            ConsoleHelper.error("No balance remaining -- please add income.");
         }
         System.out.println();
     }
