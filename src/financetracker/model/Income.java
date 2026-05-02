@@ -7,8 +7,10 @@ import java.time.LocalDate;
  * Inherits from Transaction – demonstrates inheritance.
  */
 public class Income extends Transaction {
+    //Attributes
     private final String source;
 
+    // Constructor for income
     public Income(double amount, String source, String description) {
         super(amount, description);
         this.source = source;
@@ -20,6 +22,7 @@ public class Income extends Transaction {
         this.source = source;
     }
 
+    // Getter Functions
     public String getSource() { return source; }
 
     @Override public String getType()     { return "INCOME"; }

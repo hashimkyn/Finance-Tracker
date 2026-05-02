@@ -18,11 +18,16 @@ public class FileManager {
     private static final String USERS_FILE = DATA_DIR + "/users.txt";
 
     static {
+        // Ensure the data directory exists before any file operations.
         new File(DATA_DIR).mkdirs();
     }
 
     // ─────────────────────────────── USERS ───────────────────────────────────
 
+    /**
+     * Load all registered users from the users file.
+     * Each line is expected to contain a username and password separated by '|'.
+     */
     public static List<User> loadUsers() {
         List<User> users = new ArrayList<>();
         File f = new File(USERS_FILE);
@@ -43,6 +48,10 @@ public class FileManager {
         return users;
     }
 
+    /**
+     * Save the current user list back to the users file.
+     * Existing user data is overwritten.
+     */
     public static void saveUsers(List<User> users) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(USERS_FILE))) {
             for (User u : users) pw.println(u.toFileString());
@@ -57,6 +66,10 @@ public class FileManager {
         return DATA_DIR + "/" + username + "_transactions.txt";
     }
 
+    /**
+     * Append a transaction record for the given user.
+     * Uses append mode so existing transaction history is preserved.
+     */
     public static void appendTransaction(String username, Transaction t) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(txFile(username), true))) {
             pw.println(t.toFileString());
@@ -65,6 +78,10 @@ public class FileManager {
         }
     }
 
+    /**
+     * Load all transactions for a user from the transaction file.
+     * Malformed lines are skipped and logged.
+     */
     public static List<Transaction> loadTransactions(String username) {
         List<Transaction> list = new ArrayList<>();
         File f = new File(txFile(username));
@@ -87,14 +104,14 @@ public class FileManager {
         try {
             String[] p = line.split("\\|");
             // FORMAT: TYPE|id|amount|category_or_source|description|date
-            String type   = p[0];
-            String id     = p[1];
+            String type = p[0];
+            String id = p[1];
             double amount = Double.parseDouble(p[2]);
-            String cat    = p[3];
-            String desc   = p[4];
+            String cat = p[3];
+            String desc = p[4];
             LocalDate date = LocalDate.parse(p[5]);
 
-            if ("INCOME".equals(type))  return new Income(id, amount, cat, desc, date);
+            if ("INCOME".equals(type)) return new Income(id, amount, cat, desc, date);
             if ("EXPENSE".equals(type)) return new Expense(id, amount, cat, desc, date);
         } catch (Exception e) {
             System.err.println("Skipping malformed transaction: " + line);
@@ -108,6 +125,10 @@ public class FileManager {
         return DATA_DIR + "/" + username + "_wallet.txt";
     }
 
+    /**
+     * Load the wallet balance for a user.
+     * Returns 0.0 if the wallet file does not exist or contains invalid data.
+     */
     public static double loadBalance(String username) {
         File f = new File(walletFile(username));
         if (!f.exists()) return 0.0;
@@ -121,6 +142,10 @@ public class FileManager {
         return 0.0;
     }
 
+    /**
+     * Save the current wallet balance for a user.
+     * Overwrites any previous balance stored in the file.
+     */
     public static void saveBalance(String username, double balance) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(walletFile(username)))) {
             pw.println(balance);
@@ -135,6 +160,9 @@ public class FileManager {
         return DATA_DIR + "/" + username + "_budgets.txt";
     }
 
+    /**
+     * Load budget entries for a user and reset budgets if a new month has begun.
+     */
     public static Map<String, Budget> loadBudgets(String username) {
         Map<String, Budget> map = new LinkedHashMap<>();
         File f = new File(budgetFile(username));
@@ -160,6 +188,9 @@ public class FileManager {
         return map;
     }
 
+    /**
+     * Save all budget records for a user.
+     */
     public static void saveBudgets(String username, Map<String, Budget> budgets) {
         try (PrintWriter pw = new PrintWriter(new FileWriter(budgetFile(username)))) {
             for (Budget b : budgets.values()) pw.println(b.toFileString());

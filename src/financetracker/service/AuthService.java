@@ -10,9 +10,9 @@ import java.util.List;
  * Handles user registration and authentication.
  */
 public class AuthService {
-
+    // Attributes
     private final List<User> users;
-
+    // Constructor
     public AuthService() {
         this.users = new ArrayList<>(FileManager.loadUsers());
     }
@@ -46,9 +46,8 @@ public class AuthService {
         }
         return null;
     }
-
+    // Function to check if a username exists or not
     public boolean usernameExists(String username) {
         return users.stream().anyMatch(u -> u.getUsername().equalsIgnoreCase(username));
     }
-
 }

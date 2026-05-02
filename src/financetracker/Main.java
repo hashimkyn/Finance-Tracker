@@ -8,9 +8,12 @@ import java.util.*;
 
 public class Main {
 
+    // Shared console input scanner for all menu prompts.
     private static final Scanner sc = new Scanner(System.in);
-    private static AuthService   auth;
-    private static User          currentUser;
+
+    // Services and state used while the application is running.
+    private static AuthService auth;
+    private static User currentUser;
     private static WalletService walletSvc;
     private static InsightsService insightsSvc;
 
@@ -23,6 +26,10 @@ public class Main {
 
     // ═══════════════════════════ MENUS ═══════════════════════════════════════
 
+    /**
+     * Shows the initial menu where users can register or log in.
+     * This loop continues until the user chooses to exit.
+     */
     private static void mainMenu() {
         while (true) {
             ConsoleHelper.printHeader("Personal Finance & Expense Tracker");
@@ -36,8 +43,12 @@ public class Main {
         }
     }
 
+    /**
+     * Displays the authenticated user's dashboard and main finance actions.
+     * Initializes wallet and insights services for the logged-in user.
+     */
     private static void dashboardMenu() {
-        walletSvc   = new WalletService(currentUser.getUsername());
+        walletSvc = new WalletService(currentUser.getUsername());
         insightsSvc = new InsightsService(walletSvc);
 
         while (true) {
@@ -67,6 +78,9 @@ public class Main {
 
     // ═══════════════════════════ AUTH ════════════════════════════════════════
 
+    /**
+     * Prompts the user to create a new account and validates username availability.
+     */
     private static void doRegister() {
         ConsoleHelper.printHeader("Register");
         String username = ConsoleHelper.prompt(sc, "Username:");
@@ -81,6 +95,9 @@ public class Main {
         }
     }
 
+    /**
+     * Handles user login and stores the authenticated user on success.
+     */
     private static boolean doLogin() {
         ConsoleHelper.printHeader("Login");
         String username = ConsoleHelper.prompt(sc, "Username:");
@@ -98,16 +115,22 @@ public class Main {
 
     // ═══════════════════════ INCOME / EXPENSE ════════════════════════════════
 
+    /**
+     * Prompts the user to enter income details and records the income.
+     */
     private static void doAddIncome() {
         ConsoleHelper.printHeader("Add Income");
-        double amount  = ConsoleHelper.promptDouble(sc, "Amount (PKR):");
-        String source  = ConsoleHelper.prompt(sc, "Source (e.g. Salary, Freelance):");
-        String desc    = ConsoleHelper.prompt(sc, "Description:");
+        double amount = ConsoleHelper.promptDouble(sc, "Amount (PKR):");
+        String source = ConsoleHelper.prompt(sc, "Source (e.g. Salary, Freelance):");
+        String desc = ConsoleHelper.prompt(sc, "Description:");
         walletSvc.addIncome(amount, source, desc);
         ConsoleHelper.success(String.format("Income of %.2f PKR recorded. New balance: %.2f PKR",
                 amount, walletSvc.getBalance()));
     }
 
+    /**
+     * Guides the user through adding an expense and warns if the budget limit is exceeded.
+     */
     private static void doAddExpense() {
         ConsoleHelper.printHeader("Add Expense");
         double amount = ConsoleHelper.promptDouble(sc, "Amount (PKR):");
@@ -146,6 +169,9 @@ public class Main {
 
     // ═══════════════════════ TRANSACTIONS ════════════════════════════════════
 
+    /**
+     * Transaction menu for viewing all records or filtering by month.
+     */
     private static void transactionMenu() {
         while (true) {
             ConsoleHelper.printHeader("View Transactions");
@@ -159,13 +185,19 @@ public class Main {
         }
     }
 
+    /**
+     * Prompts the user for a year and month, then displays matching transactions.
+     */
     private static void doMonthFilter() {
-        int year  = ConsoleHelper.promptInt(sc, "Year (e.g. 2025):", 2000, 2100);
-        int month = ConsoleHelper.promptInt(sc, "Month (1-12):",       1,    12);
+        int year = ConsoleHelper.promptInt(sc, "Year (e.g. 2025):", 2000, 2100);
+        int month = ConsoleHelper.promptInt(sc, "Month (1-12):", 1, 12);
         List<Transaction> txs = walletSvc.getTransactionsByMonth(year, month);
         printTransactions(txs, String.format("Transactions -- %04d-%02d", year, month));
     }
 
+    /**
+     * Prints a list of transactions with colored output and totals for income and expenses.
+     */
     private static void printTransactions(List<Transaction> txs, String title) {
         ConsoleHelper.printHeader(title);
         if (txs.isEmpty()) {
@@ -175,17 +207,20 @@ public class Main {
         for (Transaction t : txs) {
             String color = t instanceof Income ? ConsoleHelper.GREEN : ConsoleHelper.RED;
             System.out.println(color + "  " + t + ConsoleHelper.RESET);
-            if (t instanceof Income)  totalIn  += t.getAmount();
-            else                      totalOut += t.getAmount();
+            if (t instanceof Income) totalIn += t.getAmount();
+            else totalOut += t.getAmount();
         }
         ConsoleHelper.printSeparator();
-        System.out.printf("  Total Income:   %s%.2f PKR%s%n", ConsoleHelper.GREEN, totalIn,  ConsoleHelper.RESET);
-        System.out.printf("  Total Expenses: %s%.2f PKR%s%n", ConsoleHelper.RED,   totalOut, ConsoleHelper.RESET);
+        System.out.printf("  Total Income:   %s%.2f PKR%s%n", ConsoleHelper.GREEN, totalIn, ConsoleHelper.RESET);
+        System.out.printf("  Total Expenses: %s%.2f PKR%s%n", ConsoleHelper.RED, totalOut, ConsoleHelper.RESET);
         System.out.println();
     }
 
     // ═══════════════════════════ BUDGETS ═════════════════════════════════════
 
+    /**
+     * Opens the budget management menu to set or view budgets.
+     */
     private static void budgetMenu() {
         while (true) {
             ConsoleHelper.printHeader("Budget Manager");
@@ -199,6 +234,9 @@ public class Main {
         }
     }
 
+    /**
+     * Prompts the user to set or update a monthly budget for a selected expense category.
+     */
     private static void doSetBudget() {
         List<String> cats = Expense.CATEGORIES;
         System.out.println(ConsoleHelper.BOLD + "\n  Select Category:" + ConsoleHelper.RESET);
@@ -211,6 +249,9 @@ public class Main {
         ConsoleHelper.success(String.format("Budget for '%s' set to %.2f PKR/month.", category, limit));
     }
 
+    /**
+     * Displays all current budgets with a progress bar showing spending vs limit.
+     */
     private static void viewBudgets() {
         ConsoleHelper.printHeader("Current Budgets");
         Map<String, Budget> budgets = walletSvc.getBudgets();
@@ -218,7 +259,7 @@ public class Main {
         for (Map.Entry<String, Budget> e : budgets.entrySet()) {
             double spent = walletSvc.getCategorySpending(e.getKey());
             double limit = e.getValue().getLimit();
-            String bar   = buildProgressBar(spent, limit, 20);
+            String bar = buildProgressBar(spent, limit, 20);
             String color = spent > limit ? ConsoleHelper.RED : ConsoleHelper.GREEN;
             System.out.printf("  %-15s %s%s%s  %.2f / %.2f PKR%n",
                     e.getKey() + ":", color, bar, ConsoleHelper.RESET, spent, limit);
@@ -232,7 +273,9 @@ public class Main {
     }
 
     // ═══════════════════════════ BANNER ══════════════════════════════════════
-
+    /**
+     * Prints the app banner shown at startup.
+     */
     private static void printBanner() {
         System.out.println(ConsoleHelper.CYAN);
         System.out.println("  ╔══════════════════════════════════════════════════════╗");

@@ -9,14 +9,14 @@ import java.util.List;
  * Inherits from Transaction – demonstrates inheritance.
  */
 public class Expense extends Transaction {
-
+    // List for storing categories of expense
     public static final List<String> CATEGORIES = Arrays.asList(
             "Food", "Transport", "Housing", "Health",
             "Education", "Entertainment", "Shopping", "Utilities", "Other"
     );
 
     private final String category;
-
+    // Constructor
     public Expense(double amount, String category, String description) {
         super(amount, description);
         if (!CATEGORIES.contains(category))

@@ -6,10 +6,12 @@ import java.time.YearMonth;
  * Holds a monthly budget limit for a specific expense category.
  */
 public class Budget {
+    // Attributes of class Budget
     private final String category;
     private double limit;
     private YearMonth month;
 
+    // Constructor
     public Budget(String category, double limit) {
         this.category = category;
         this.limit = limit;
@@ -23,10 +25,12 @@ public class Budget {
         this.month = month;
     }
 
+    // Getter Functions
     public String getCategory() { return category; }
     public double getLimit()    { return limit; }
     public YearMonth getMonth() { return month; }
 
+    //Setter for setting limit for a category
     public void setLimit(double limit) { this.limit = limit; }
 
     /** Reset to the current month (monthly reset mechanism). */
@@ -36,7 +40,7 @@ public class Budget {
             this.month = now;
         }
     }
-
+    // Function for Budget format for file saving
     public String toFileString() {
         // FORMAT: category|limit|month
         return String.join("|", category, String.valueOf(limit), month.toString());
