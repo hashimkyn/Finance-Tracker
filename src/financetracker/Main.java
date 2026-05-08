@@ -6,6 +6,16 @@ import financetracker.util.ConsoleHelper;
 
 import java.util.*;
 
+/**
+ * Finance Tracker application entry point.
+ *
+ * This class contains the main application flow for registration,
+ * login, dashboard navigation, and financial actions such as
+ * income, expense, transaction, and budget management.
+ *
+ * Shared services and the currently authenticated user are stored
+ * as static fields while the application is running.
+ */
 public class Main {
 
     // Shared console input scanner for all menu prompts.
