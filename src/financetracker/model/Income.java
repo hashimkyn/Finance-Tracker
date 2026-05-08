@@ -27,11 +27,11 @@ public class Income extends Transaction {
 
     @Override public String getType()     { return "INCOME"; }
     @Override public String getCategory() { return source; }
-
     @Override
     public String toFileString() {
         // FORMAT: INCOME|id|amount|source|description|date
-        return String.join("|", "INCOME", getId(), String.valueOf(getAmount()),
-                source, getDescription(), getDate().toString());
+        return String.join("|", "INCOME", getId(),
+        String.valueOf(getAmount()), source, getDescription(), getDate().toString());
     }
 }
+

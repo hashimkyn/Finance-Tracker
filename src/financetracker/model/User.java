@@ -7,6 +7,8 @@ public class User {
     // Attributes of user
     private final String username;
     private final String password;  
+    
+    
     //Constructor
     public User(String username, String password) {
         this.username = username;
@@ -17,9 +19,14 @@ public class User {
     public static User fromFile(String username, String password) {
         return new User(username, password);
     }
-    // Getter Functions
+
+
+    // Getter Methods
     public String getUsername() { return username; }
     public String getPassword() { return password; }
+    
+    
+    
     // Function for authentication of password
     public boolean authenticate(String password) {
         return password.equals(this.password);

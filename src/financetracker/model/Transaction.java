@@ -13,6 +13,7 @@ public abstract class Transaction {
     private final double amount;
     private final LocalDate date;
     private final String description;
+
     // Constructor for Transaction
     public Transaction(double amount, String description) {
         this.id = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -33,12 +34,13 @@ public abstract class Transaction {
     public double getAmount()      { return amount; }
     public LocalDate getDate()     { return date; }
     public String getDescription() { return description; }
-    // Abstract functions to be implemented by child classes
+
+    // Abstract functions to be implemented by subclasses
     public abstract String getType();
     public abstract String getCategory();
-
-    /** Serialize to a pipe-delimited string for file storage. */
     public abstract String toFileString();
+
+    
     // Function for transaction format
     @Override
     public String toString() {
